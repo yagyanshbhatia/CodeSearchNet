@@ -8,7 +8,7 @@ import tensorflow_hub as hub
 import numpy as np
 import os, sys
 import pickle
-from sklearn.metrics.pairwise import cosine_similarity
+# from sklearn.metrics.pairwise import cosine_similarity
 
 
 module_url = "https://tfhub.dev/google/universal-sentence-encoder/2" #@param ["https://tfhub.dev/google/universal-sentence-encoder/2", "https://tfhub.dev/google/universal-sentence-encoder-large/3"]
@@ -33,6 +33,7 @@ with tf.Session() as session:
   session.run([tf.global_variables_initializer(), tf.tables_initializer()])
   sentences_embeddings = session.run(embed(sentences_list))
 
+# default embedding size in USE is 512
 embeddings = {}
 for i in range(0, len(sentences_list)):
     embeddings[sentences_list[i]] = sentences_embeddings[i]
