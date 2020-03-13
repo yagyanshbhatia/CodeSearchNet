@@ -14,14 +14,15 @@ import pickle
 module_url = "https://tfhub.dev/google/universal-sentence-encoder/2" #@param ["https://tfhub.dev/google/universal-sentence-encoder/2", "https://tfhub.dev/google/universal-sentence-encoder-large/3"]
 
 # Import the Universal Sentence Encoder's TF Hub module
-embed = hub.Module(module_url)
+embed = hub.Module("USE/")
 
 # Reduce logging output.
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+# tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 # load the sentences
 pickle_in = open("docstrings_list.pkl","rb")
 sentences_list = pickle.load(pickle_in)
+pickle_in.close()
 
 temp = []
 for method in sentences_list:
@@ -33,12 +34,13 @@ with tf.Session() as session:
   session.run([tf.global_variables_initializer(), tf.tables_initializer()])
   sentences_embeddings = session.run(embed(sentences_list))
 
-# default embedding size in USE is 512
-embeddings = {}
-for i in range(0, len(sentences_list)):
-    embeddings[sentences_list[i]] = sentences_embeddings[i]
+for partition in range(0,10):
+  # default embedding size in USE is 512
+  embeddings = {}
+  for i in range(partition*len(sentences_list)/10, (partition+1)*len(sentences_list)/10):
+      embeddings[sentences_list[i]] = sentences_embeddings[i]
 
-# dump the embeddings Finally.
-pickle_out = open("sentence_embeddings.pkl","wb")
-pickle.dump(embeddings, pickle_out)
-pickle_out.close()
+  # dump the embeddings Finally.
+  pickle_out = open("sentence_embeddings_"+str(partition)+".pkl","wb")
+  pickle.dump(embeddings, pickle_out)
+  pickle_out.close()
