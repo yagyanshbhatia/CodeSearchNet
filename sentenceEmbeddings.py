@@ -14,13 +14,14 @@ import pickle
 module_url = "https://tfhub.dev/google/universal-sentence-encoder/2" #@param ["https://tfhub.dev/google/universal-sentence-encoder/2", "https://tfhub.dev/google/universal-sentence-encoder-large/3"]
 
 # Import the Universal Sentence Encoder's TF Hub module
-embed = hub.Module(module_url)
+embed = hub.Module("/data/CodeSearchNet/USE/")
 
 # Reduce logging output.
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+#tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 # load the sentences
-pickle_in = open("docstrings_list.pkl","rb")
+pickle_in = open("/data/CodeSearchNet/notebooks/docstrings_list_train_java.pkl","rb")
+
 sentences_list = pickle.load(pickle_in)
 
 temp = []
@@ -39,6 +40,6 @@ for i in range(0, len(sentences_list)):
     embeddings[sentences_list[i]] = sentences_embeddings[i]
 
 # dump the embeddings Finally.
-pickle_out = open("sentence_embeddings.pkl","wb")
+pickle_out = open("/data/CodeSearchNet/notebooks/sentenceEmbedding_train_java.pkl","wb")
 pickle.dump(embeddings, pickle_out)
 pickle_out.close()
