@@ -20,7 +20,8 @@ embed = hub.Module("USE/")
 # tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 # load the sentences
-pickle_in = open("docstrings_list.pkl","rb")
+pickle_in = open("/data/CodeSearchNet/notebooks/docstrings_list_train_java.pkl","rb")
+
 sentences_list = pickle.load(pickle_in)
 pickle_in.close()
 
