@@ -1,0 +1,71 @@
+CodeSearchNet folder is hosted in yagyansh github
+code2seq folder is hosted in acp129 github
+
+Run on ubuntu (16.04 tested).
+
+Requirements:
+
+Python 3.6 (or higher, Python3 required)
+Packages:
+	pandas
+	numpy
+	pickle
+	pprint
+	pathlib
+	os (should be there by default)
+	rouge
+	jupyter notebook
+
+JDK(for preprocessing.sh in code2seq):
+sudo apt-get install default-jdk
+Used to install java in wsl ubuntu 16.04
+Resource reference: https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04
+
+Rouge (to generate evaluation parameters of code2seq model on testing data)
+
+Code2seq default(untrainable) model(52 iterations, 179 mb file)
+
+
+Folder heirarchy:
+
+	BTP:
+		CodeSearchNet
+		code2seq
+
+To create the training data:
+Under BTP->CodeSearchNet->notebooks:
+	Run all blocks of ExploreData.ipynb (not ExploreData_official)
+	refer its documentation (comments)
+
+By default all required data will be made in CodeSearchNet folder, and will be referenced by code2seq.
+
+
+To run the preprocess(to be stored in the code2seq data file):
+We can either generate the proprocess for the entire training process (difficult on pc), or just the test file to run the rouge parameters.
+We describe the latter below:
+Under BTP->code2seq:
+	In the location where the train, test, valid code of CodeSearchNet, create dummy train and valid files, that contain 10 code files.
+	In preprocess.sh, modify the TRAIN_DIR and VALID_DIR to point to the dummy files.  Set them to the real folders for training the model.
+	Set TEST_DIR to point to the actual (full) test file.
+	run preprocess.sh
+	IMP: The cores parameter must be 4 or 8 (depends on your CPU cores).  64 (default) causes jdk errors.\
+	The output is .c2s files, located in code2seq->data->proproc_codesearch
+
+To generate the predictions:
+	code2seq generates the predictions for the method names.
+	If you run the predict command:
+	python3 code2seq.py --load models/java-large-model/model_iter52.release --test data/java-large/preproc_codesearch.test.c2s
+	(point it to the proper load file locations of the model and test data)
+	Rouge might crash.  Ignore that.
+	the predictions will be made in a log file, in the same location as the model folder.
+	IMP: If you want to rerun the predictions, delete the log, pred, ref files (or move them).  If you don't the output won't be properly captured for the rerun.
+
+Finally:
+
+predictions might not be for all the files!  The log output doesn't match some of the files.  Is the output of the log file not ordered?
+
+
+
+	
+	
+	
